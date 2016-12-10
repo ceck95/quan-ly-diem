@@ -1,0 +1,68 @@
+<?php
+// @Author: Tran Van Nhut <nhutdev>
+// @Date:   2016-11-27T09:37:17+07:00
+// @Email:  tranvannhut4495@gmail.com
+# @Last modified by:   nhutdev
+# @Last modified time: 2016-11-30T23:40:01+07:00
+
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use common\modules\danhSachLop\models\Lop;
+use common\modules\danhSachLop\models\MonHoc;
+use \yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
+
+/* @var $this yii\web\View */
+/* @var $model common\modules\bangDiem\models\BangDiemGiuaKi */
+/* @var $form yii\widgets\ActiveForm */
+?>
+
+<div class="bang-diem-giua-ki-form">
+
+    <?php $form = ActiveForm::begin(); ?>
+
+    <?= $form->field($model, 'ma_lop')->widget(Select2::classname(), [
+      'data' => ArrayHelper::map(Lop::findAll(array('status' => STATUS_ACTIVE)), 'ma_lop', 'ten'),
+      'language' => 'en',
+      'options' => $model->ma_lop ? [$model->ma_lop => ['Selected' => 'selected']] : ['prompt' => 'Mã lớp'],
+      'pluginOptions' => [
+        'allowClear' => true,
+      ],
+    ]) ?>
+    <?= $form->field($model, 'ma_hoc_sinh')->widget(DepDrop::classname(), [
+        'options' => $model->ma_hoc_sinh ? [$model->ma_hoc_sinh => ['Selected' => 'selected']] : ['prompt' => 'Mã học sinh'],
+        'type' => DepDrop::TYPE_SELECT2,
+        'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+        'pluginOptions' => [
+            'depends' => ['bangdiemgiuaki-ma_lop'],
+            'url' => Url::to(['/danhSachLop/hoc-sinh/list-hs-by-lop']),
+            'loadingText' => 'Loading ...',
+        ],
+    ]); ?>
+
+    <?= $form->field($model, 'ma_mon')->widget(Select2::classname(), [
+      'data' => ArrayHelper::map(MonHoc::findAll(array('status' => STATUS_ACTIVE)), 'ma_mon_hoc', 'ten_mon_hoc'),
+      'language' => 'en',
+      'options' => $model->ma_mon ? [$model->ma_mon => ['Selected' => 'selected']] : ['prompt' => 'Mã môn học'],
+      'pluginOptions' => [
+        'allowClear' => true,
+      ],
+    ]) ?>
+
+    <?= $form->field($model, 'kiem_tra_mieng')->textInput() ?>
+
+    <?= $form->field($model, 'kiem_tra_15_phut')->textInput() ?>
+
+    <?= $form->field($model, 'kiem_tra_1_tiet')->textInput() ?>
+
+    <?= $form->field($model, 'thi')->textInput() ?>
+
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Tạo' : 'Chỉnh sửa', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>
